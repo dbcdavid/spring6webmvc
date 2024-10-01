@@ -1,6 +1,7 @@
 package guru.classes.spring6restmvc.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import guru.classes.spring6restmvc.entities.Beer;
 import guru.classes.spring6restmvc.model.BeerDTO;
 import guru.classes.spring6restmvc.services.BeerService;
 import guru.classes.spring6restmvc.services.BeerServiceImpl;
@@ -13,7 +14,9 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Optional;
 import java.util.UUID;
@@ -70,6 +73,39 @@ class BeerControllerTest {
                         .content(objectMapper.writeValueAsString(beer)))
                 .andExpect(status().isCreated())
                 .andExpect(header().exists("Location"));
+    }
+
+    @Test
+    void testCreateNewBeerNullName() throws Exception {
+        BeerDTO beer = BeerDTO.builder().build();
+
+        given(beerService.saveNewBeer(any(BeerDTO.class))).willReturn(beerServiceImpl.listBeers().get(1));
+
+        MvcResult mvcResult = mockMvc.perform(post(BeerController.BEER_PATH)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(beer)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.length()", is(6)))
+                .andReturn();
+
+        System.out.println(mvcResult.getResponse().getContentAsString());
+    }
+
+    @Test
+    void testUpdateBeerNullFields() throws Exception {
+        BeerDTO beerDTO = beerServiceImpl.listBeers().get(0);
+        beerDTO.setBeerName("");
+
+        given(beerService.updateBeerById(beerDTO.getId(), beerDTO)).willReturn(Optional.of(beerDTO));
+
+        mockMvc.perform(put(BeerController.BEER_PATH_ID, beerDTO.getId())
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(beerDTO)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.length()", is(1)))
+                .andReturn();
     }
 
     @Test
