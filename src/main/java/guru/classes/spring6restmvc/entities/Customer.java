@@ -3,6 +3,8 @@ package guru.classes.spring6restmvc.entities;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -17,7 +19,8 @@ public class Customer {
 
     @Id
     @GeneratedValue(generator = "UUID")
-    @Column(length = 36, nullable = false, updatable = false, columnDefinition = "varchar")
+    @JdbcTypeCode(SqlTypes.CHAR)
+    @Column(length = 36, nullable = false, updatable = false, columnDefinition = "varchar(36)")
     private UUID id;
 
     @Version
