@@ -2,7 +2,6 @@ package guru.classes.spring6restmvc.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
@@ -25,6 +24,10 @@ public class Customer {
 
     @Version
     private Integer version;
+
+    @Column(length = 255)
+    private String email;
+
 
     private String customerName;
     private LocalDateTime createdDate;
