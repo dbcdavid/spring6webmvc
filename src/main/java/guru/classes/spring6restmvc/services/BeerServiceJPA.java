@@ -8,7 +8,6 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -65,7 +64,6 @@ public class BeerServiceJPA implements BeerService {
             if (StringUtils.hasText(beer.getUpc())) {
                 foundBeer.setUpc(beer.getUpc());
             }
-            foundBeer.setUpdateDate(LocalDateTime.now());
 
             atomicReference.set(Optional.of(beerMapper.beerToBeerDTO(beerRepository.save(foundBeer))));
         }, () -> {
@@ -85,7 +83,6 @@ public class BeerServiceJPA implements BeerService {
             foundBeer.setUpc(beer.getUpc());
             foundBeer.setQuantityOnHand(beer.getQuantityOnHand());
             foundBeer.setPrice(beer.getPrice());
-            foundBeer.setUpdateDate(LocalDateTime.now());
 
             atomicReference.set(Optional.of(beerMapper.beerToBeerDTO(beerRepository.save(foundBeer))));
         }, () -> {

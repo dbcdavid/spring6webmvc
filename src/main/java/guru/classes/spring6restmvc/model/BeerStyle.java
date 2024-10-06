@@ -2,10 +2,5 @@ package guru.classes.spring6restmvc.model;
 
 
 public enum BeerStyle {
-    GOSE,
-    ALE,
-    PALE_ALE,
-    LAGER,
-    IPA,
-    STOUT
+    LAGER, PILSNER, STOUT, GOSE, PORTER, ALE, WHEAT, IPA, PALE_ALE, SAISON
 }
