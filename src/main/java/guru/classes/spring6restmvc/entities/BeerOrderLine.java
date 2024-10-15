@@ -8,8 +8,6 @@ import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.type.SqlTypes;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.UUID;
 
 @Builder
@@ -18,7 +16,7 @@ import java.util.UUID;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-public class Customer {
+public class BeerOrderLine {
 
     @Id
     @GeneratedValue(generator = "UUID")
@@ -27,20 +25,23 @@ public class Customer {
     private UUID id;
 
     @Version
-    private Integer version;
-
-    @Column(length = 255)
-    private String email;
-
-    private String customerName;
+    private Long version;
 
     @CreationTimestamp
+    @Column(updatable = false)
     private LocalDateTime createdDate;
 
     @UpdateTimestamp
     private LocalDateTime lastModifiedDate;
 
-    @Builder.Default
-    @OneToMany(mappedBy = "customer")
-    private Set<BeerOrder> beerOrders = new HashSet<>();
+    public boolean isNew() { return this.id == null; }
+
+    private Integer orderQuantity = 0;
+    private Integer quantityAllocated = 0;
+
+    @ManyToOne
+    private BeerOrder beerOrder;
+
+    @ManyToOne
+    private Beer beer;
 }
